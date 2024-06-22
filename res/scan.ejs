@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ürün Barkot Okutma ve Stoktan Düşme</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #barcodeInput {
+      margin-bottom: 10px;
+      width: calc(100% - 20px);
+      padding: 10px;
+      box-sizing: border-box;
+      font-size: 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #barcodeInput:focus {
+      outline: none;
+      border-color: #666;
+    }
+
+    #barcodeList {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    #barcodeList li {
+      margin-bottom: 5px;
+      padding: 8px;
+      background-color: #f2f2f2;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #results {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f2f2f2;
+      border-radius: 8px;
+    }
+
+    .product-info {
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .product-info p {
+      margin: 5px 0;
+    }
+
+    #processButton {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    #processButton:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Ürün Barkot Okutma ve Stoktan Düşme</h1>
+
+    <input type="text" id="barcodeInput" placeholder="Barkod girin ve Enter'a basın...">
+    <ul id="barcodeList"></ul>
+
+    <button id="processButton">Okut</button>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    const barcodeInput = document.getElementById('barcodeInput');
+    const barcodeList = document.getElementById('barcodeList');
+    const processButton = document.getElementById('processButton');
+    const resultsDiv = document.getElementById('results');
+    let barcodes = [];
+
+    barcodeInput.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        const barcode = barcodeInput.value.trim();
+        if (barcode !== '') {
+          barcodes.push(barcode);
+          barcodeInput.value = '';
+          renderBarcodeList();
+        }
+      }
+    });
+
+    processButton.addEventListener('click', function() {
+      if (barcodes.length > 0) {
+        // POST request to backend with barcodes array
+        fetch('/scan', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ barcodes })
+        })
+        .then(response => response.json())
+        .then(data => {
+          processResults(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          resultsDiv.innerHTML = '<p>İşlem sırasında bir hata oluştu.</p>';
+        });
+      } else {
+        resultsDiv.innerHTML = '<p>Lütfen en az bir barkod girin.</p>';
+      }
+    });
+
+    function renderBarcodeList() {
+      barcodeList.innerHTML = '';
+      barcodes.forEach(function(barcode) {
+        const li = document.createElement('li');
+        li.textContent = barcode;
+        barcodeList.appendChild(li);
+      });
+    }
+
+    function processResults(results) {
+      resultsDiv.innerHTML = ''; // Sonuçları temizle
+      const countedBarcodes = {}; // Barkodların sayısını tutmak için obje
+      let totalPrice = 0; // Toplam fiyat
+
+      // Barkodların sayısını hesapla
+      barcodes.forEach(barcode => {
+        countedBarcodes[barcode] = (countedBarcodes[barcode] || 0) + 1;
+      });
+
+      results.forEach(function(result) {
+        if (result.scannedProduct) {
+          const { barcode, name, price, stock } = result.scannedProduct;
+          const count = countedBarcodes[barcode] || 1; // Sayısını al veya 1 olarak ayarla
+          totalPrice += price * count; // Toplam fiyatı güncelle
+          const productInfo = `
+            <div class="product-info">
+              <p><strong>Barkod:</strong> ${barcode}</p>
+              <p><strong>Ürün Adı:</strong> ${name}</p>
+              <p><strong>Fiyat:</strong> ${price} TL</p>
+              <p><strong>Stok:</strong> ${stock} adet</p>
+              <p><strong>Okutulan Adet:</strong> ${count}</p>
+              <p><strong>Birim Fiyatı:</strong> ${price * count} TL</p>
+            </div>
+          `;
+          // Sonuçları gösterirken her barkodu sadece bir kez göster
+          if (!resultsDiv.querySelector(`[data-barcode="${barcode}"]`)) {
+            const div = document.createElement('div');
+            div.innerHTML = productInfo;
+            div.setAttribute('data-barcode', barcode);
+            resultsDiv.appendChild(div);
+          } else {
+            const existingDiv = resultsDiv.querySelector(`[data-barcode="${barcode}"]`);
+            existingDiv.innerHTML = productInfo;
+          }
+        } else if (result.scanError) {
+          resultsDiv.innerHTML += '<p>Barkod okunamadı veya ürün bulunamadı.</p>';
+        }
+      });
+
+      // Toplam fiyatı göster
+      const totalInfo = `
+        <div class="product-info">
+          <p><strong>Toplam Fiyat:</strong> ${totalPrice.toFixed(2)} TL</p>
+        </div>
+      `;
+      resultsDiv.innerHTML += totalInfo;
+
+      barcodes = []; // Listeyi temizle
+      renderBarcodeList(); // Listeyi güncelle
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "adapter": "json",
+  "name": "db",
+  "path": "anildombayci",
+  "deleteEmptyArray": true,
+  "deleteEmptyObject": true
+}

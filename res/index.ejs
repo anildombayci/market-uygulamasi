@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stok Takip Sistemi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    h1, h2 {
+      color: #333;
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 20px 0;
+      color: white;
+      background-color: #007bff;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    p {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 style="color:white">Stok Takip Sistemi</h1>
+    <nav>
+      <a href="/">Ana Sayfa</a>
+      <a href="/add">Yeni Ürün Ekle</a>
+      <a href="/find">Ürün Bul</a>
+      <a href="/scan">Kasa Modu</a>
+    </nav>
+  </header>
+  
+  <main>
+    <h2>Ürün Listesi</h2>
+    <% if (products.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Ürün Adı</th>
+            <th>Barkod</th>
+            <th>Birim Fiyatı</th>
+            <th>Stok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(product => { %>
+            <tr>
+              <td><%= product.name %></td>
+              <td><%= product.barcode %></td>
+              <td><%= product.price %> TL</td>
+              <td><%= product.stock %> adet</td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>Hiç ürün bulunmamaktadır.</p>
+    <% } %>
+  </main>
+</body>
+</html>
