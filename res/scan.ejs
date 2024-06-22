@@ -183,12 +183,18 @@
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         if (data.length === 0) {
           showError('Böyle bir barkot bulunamadı.');
         } else {
           hideError();
+        if (data[0].scannedProduct.stock < 1) {
+          showError(`Ürün Stok seviyesi yetersiz: ${data[0].scannedProduct.stock + " - " + data[0].scannedProduct.name}`)    
+          processResults(data);
+        } else {
           updateCountedBarcodes(data);
           processResults(data);
+        }
         }
       })
       .catch(error => {
