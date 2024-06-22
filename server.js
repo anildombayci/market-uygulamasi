@@ -13,9 +13,7 @@ let express = require("express"),
     },
   }),
   ayarlar = {
-    port: 3000,
-    spotifyToken:
-      "",
+    port: 3000
   },
   path = require("path"),
   passport = require("passport"),
@@ -121,6 +119,19 @@ app.post('/find', async (req, res) => {
     yukle(res, req, 'find.ejs', { searched: true }); // Ürün bulunamazsa sadece arama yapıldığını EJS şablonuna gönder
   }
 });
+
+app.post('/downStock', async (req, res) => {
+  const barcode = req.body.barcode
+  const count = req.body.count
+  
+  const foundProduct = await func.findOnBarcode(barcode)
+  if (foundProduct) {
+    var downStock = await func.downOfStock(barcode, count)
+    return downStock
+  } else {
+    return { status: 404, message: "Bu Stok ürünü bulunamadı veya kaldırılmış olabilir." }
+  }
+})
 
 app.get("/scan", async (req, res) => {
   var items = await func.listAll()
