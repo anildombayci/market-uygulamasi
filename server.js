@@ -153,7 +153,7 @@ app.post('/scan', async (req, res) => {
         if (scannedProduct.stock > 0) {
           results.push({ scannedProduct });
         } else {
-          results.push({ scanError: true }); // Stokta ürün yok hatası
+          results.push({ scannedProduct }); // Stokta ürün yok hatası
         }
       } else {
         results.push({ scanError: true }); // Ürün bulunamadı hatası
