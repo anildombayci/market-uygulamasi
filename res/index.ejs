@@ -94,12 +94,21 @@
         </thead>
         <tbody>
           <% products.forEach(product => { %>
+            <% if (product.stock < 1) { %>
+            <tr>
+              <td><%= product.name %></td>
+              <td><%= product.barcode %></td>
+              <td><%= product.price %> TL</td>
+              <td>Stokta Yok.</td>
+            </tr>
+           <% } else { %>
             <tr>
               <td><%= product.name %></td>
               <td><%= product.barcode %></td>
               <td><%= product.price %> TL</td>
               <td><%= product.stock %> adet</td>
             </tr>
+           <% } %>
           <% }) %>
         </tbody>
       </table>
