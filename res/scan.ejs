@@ -164,10 +164,13 @@
         countedBarcodes[barcode] = (countedBarcodes[barcode] || 0) + 1;
       });
 
-      results.forEach(function(result) {
-        if (result.scannedProduct) {
-          const { barcode, name, price, stock } = result.scannedProduct;
-          const count = countedBarcodes[barcode] || 1; // Sayısını al veya 1 olarak ayarla
+      // Tüm barkodları işleyerek sonuçları göster
+      Object.keys(countedBarcodes).forEach(barcode => {
+        const count = countedBarcodes[barcode];
+        const result = results.find(r => r.scannedProduct && r.scannedProduct.barcode === barcode);
+
+        if (result && result.scannedProduct) {
+          const { name, price, stock } = result.scannedProduct;
           totalPrice += price * count; // Toplam fiyatı güncelle
           const productInfo = `
             <div class="product-info">
@@ -176,7 +179,7 @@
               <p><strong>Fiyat:</strong> ${price} TL</p>
               <p><strong>Stok:</strong> ${stock} adet</p>
               <p><strong>Okutulan Adet:</strong> ${count}</p>
-              <p><strong>Birim Fiyatı:</strong> ${price * count} TL</p>
+              <p><strong>Toplam Fiyat:</strong> ${(price * count).toFixed(2)} TL</p>
             </div>
           `;
           // Sonuçları gösterirken her barkodu sadece bir kez göster
@@ -185,12 +188,7 @@
             div.innerHTML = productInfo;
             div.setAttribute('data-barcode', barcode);
             resultsDiv.appendChild(div);
-          } else {
-            const existingDiv = resultsDiv.querySelector(`[data-barcode="${barcode}"]`);
-            existingDiv.innerHTML = productInfo;
           }
-        } else if (result.scanError) {
-          resultsDiv.innerHTML += '<p>Barkod okunamadı veya ürün bulunamadı.</p>';
         }
       });
 
