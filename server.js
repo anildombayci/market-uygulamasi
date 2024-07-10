@@ -71,6 +71,11 @@ app.get("/test", (req, res) => {
   func.db.set("sa", "as")
 })
 
+app.get("/listAll", async (req, res) => {
+  var items = await func.listAll()
+  res.send(items)
+})
+
 app.get("/add", async (req, res) => {
   yukle(res, req, "urunEkle.ejs")
 })
