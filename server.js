@@ -76,6 +76,25 @@ app.get("/listAll", async (req, res) => {
   res.send(items)
 })
 
+app.get("/memory", async (req, res) => {
+  var items = await func.listAll("order")
+  yukle(res, req, "memory.ejs", { orders: items })
+})
+
+app.post("/deleteMemory", async (req, res) => {
+  func.db.delete("orders")
+})
+
+app.post("/closeShopping", async (req, res) => {
+    const { countedBarcodes, totalPrice } = req.body;
+    var save = await func.saveShopping(countedBarcodes, totalPrice)
+    if (save.status === 200) {
+      console.log("Veri Tabanına Kayıt Tamamlandı")
+    } else if (save.status === 500) {
+      console.log("Veri Tabanına Kayıt Yapılamadı: ", + save.error)
+    }
+})
+
 app.get("/add", async (req, res) => {
   yukle(res, req, "urunEkle.ejs")
 })

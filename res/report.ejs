@@ -1,0 +1,98 @@
+<!-- views/report.ejs -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gün Sonu Raporu</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #007bff;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f1f3f5;
+    }
+    .total {
+      font-weight: bold;
+    }
+    .empty-message {
+      text-align: center;
+      margin-top: 20px;
+      font-style: italic;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Gün Sonu Raporu</h1>
+    <% if (orders.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Barkod</th>
+            <th>Ürün Adı</th>
+            <th>Adet</th>
+            <th>Birim Fiyat</th>
+            <th>Toplam Fiyat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% let totalSales = 0; %>
+          <% orders.forEach(order => { %>
+            <% order.items.forEach(item => { %>
+              <% let itemTotal = item.count * parseFloat(item.product.price); %>
+              <tr>
+                <td><%= item.barcode %></td>
+                <td><%= item.product.name %></td>
+                <td><%= item.count %></td>
+                <td><%= parseFloat(item.product.price).toFixed(2) %> TL</td>
+                <td><%= itemTotal.toFixed(2) %> TL</td>
+              </tr>
+              <% totalSales += itemTotal; %>
+            <% }); %>
+          <% }); %>
+          <tr class="total">
+            <td colspan="4">Toplam Satış</td>
+            <td><%= totalSales.toFixed(2) %> TL</td>
+          </tr>
+        </tbody>
+      </table>
+    <% } else { %>
+      <div class="empty-message">
+        Sipariş bulunmamaktadır.
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>

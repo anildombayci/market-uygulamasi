@@ -193,8 +193,7 @@
         <h2>Ürünleri Seç</h2>
         <div id="productList"></div>
         <div class="button-container">
-          <button onclick="selectProducts()">Seç</button>
-          <button onclick="closePopup()">Kapat</button>
+          <button onclick="selectProducts()" style="background-color: #28a745">Seç</button>
         </div>
       </div>
     </div>
@@ -399,6 +398,23 @@
     Object.keys(countedBarcodes).forEach(barcode => {
       const { count, product } = countedBarcodes[barcode];
       downOfStock(barcode, count); // Stoktan düşürme işlemi
+    });
+    
+    // Backend'e alışveriş bilgilerini kaydetme işlemi
+    fetch('/closeShopping', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ countedBarcodes, totalPrice })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Alışveriş kaydı başarıyla kaydedildi:', data);
+        // Başka bir işlem yapabilirsiniz (örneğin, kullanıcıya bilgi vermek için)
+    })
+    .catch(error => {
+        console.error('Alışveriş kaydı sırasında bir hata oluştu:', error);
     });
 
     // Sonuçları temizle
