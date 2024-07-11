@@ -171,8 +171,34 @@
     .product-item input[type="checkbox"] {
       margin-right: 5px;
     }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
+  <header>
+    <h1 style="color:white">Stok Takip Sistemi</h1>
+    <nav>
+      <a href="/">Ana Sayfa</a>
+      <a href="/add">Yeni Ürün Ekle</a>
+      <a href="/find">Ürün Bul</a>
+      <a href="/scan">Kasa Modu</a>
+      <a href="/memory">Geçmiş Alışveriş(ler)</a>
+      <a href="/dayEndingReport">Gün Sonu Raporu</a>
+    </nav>
+  </header>
 <body>
   <div class="container">
     <h1>Ürün Barkot Okutma ve Stoktan Düşme</h1>
