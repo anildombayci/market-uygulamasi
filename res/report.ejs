@@ -55,8 +55,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Gün Sonu Raporu</h1>
-    <% if (orders.length > 0) { %>
+    <h1>Gün Sonu Raporu - <%= date %></h1>
+    <% if (dayEndingReport.length > 0) { %>
       <table>
         <thead>
           <tr>
@@ -69,7 +69,7 @@
         </thead>
         <tbody>
           <% let totalSales = 0; %>
-          <% orders.forEach(order => { %>
+          <% dayEndingReport.forEach(order => { %>
             <% order.items.forEach(item => { %>
               <% let itemTotal = item.count * parseFloat(item.product.price); %>
               <tr>

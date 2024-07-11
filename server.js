@@ -85,6 +85,59 @@ app.post("/deleteMemory", async (req, res) => {
   func.db.delete("orders")
 })
 
+// Async function to get day ending report and total sales
+async function getDayEndingReport() {
+    try {
+        const allOrders = await func.listAll("order"); // Tüm siparişleri asenkron olarak al
+
+        const currentDate = new Date(); // Şu anki tarih ve saat
+        const previousDay = new Date(currentDate);
+        previousDay.setDate(previousDay.getDate() - 1); // Önceki günün tarihi
+
+        // Önceki günün tarihine göre filtreleme yaparak sadece ilgili kayıtları al
+        const dayEndingReport = allOrders.filter(order => {
+            const orderDate = new Date(order.date); // Kaydın tarihi
+            return orderDate.toDateString() === previousDay.toDateString(); // Tarih karşılaştırması
+        });
+
+        // Toplam satış miktarını hesapla
+        const totalSales = dayEndingReport.reduce((total, order) => {
+            return total + order.totalPrice;
+        }, 0);
+
+        return {
+            dayEndingReport: dayEndingReport,
+            totalSales: totalSales
+        };
+    } catch (error) {
+        console.error('Gün sonu raporu alınamadı:', error);
+        throw error;
+    }
+}
+
+// API endpoint to get day ending report and total sales
+app.get("/dayEndingReport", async (req, res) => {
+    try {
+        const { dayEndingReport, totalSales } = await getDayEndingReport();
+
+        // Verileri tek bir rapor halinde birleştirerek JSON formatında döndür
+        const mergedReport = {
+            date: new Date().toLocaleDateString('tr-TR'),
+            dayEndingReport: dayEndingReport.map(order => ({
+                date: order.date,
+                items: order.items,
+                totalPrice: order.totalPrice
+            })),
+            totalSales: totalSales
+        };
+
+        yukle(res, req, "report.ejs", mergedReport)
+    } catch (error) {
+        console.error('Gün sonu raporu alınamadı:', error);
+        res.status(500).send('Gün sonu raporu alınamadı');
+    }
+});
+
 app.post("/closeShopping", async (req, res) => {
     const { countedBarcodes, totalPrice } = req.body;
     var save = await func.saveShopping(countedBarcodes, totalPrice)
