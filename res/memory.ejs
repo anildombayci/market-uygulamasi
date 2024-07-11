@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sipariş Listesi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            background-color: #fff;
+        }
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+        ul li {
+            list-style-type: none;
+            margin-bottom: 5px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .clear-button {
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .clear-button:hover {
+            background-color: #cc0000;
+        }
+        .empty-message {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sipariş Listesi</h1>
+    <% if (orders && orders.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Ürünler</th>
+                    <th>Toplam Fiyat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td><%= new Date(order.date).toLocaleString("tr-TR", { day: 'numeric', month: 'long', year: 'numeric' , hour: 'numeric', minute: 'numeric' })%></td>
+                        <td>
+                            <ul>
+                                <% order.items.forEach(item => { %>
+                                    <li><%= `${item.product.name} - ${item.barcode} (${item.count} adet)` %></li>
+                                <% }); %>
+                            </ul>
+                        </td>
+                        <td><%= `${order.totalPrice.toFixed(2)} TL` %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        <div class="button-container">
+            <button class="clear-button" onclick="clearOrders()">Siparişleri Temizle</button>
+        </div>
+    <% } else { %>
+        <div class="empty-message">
+            Sipariş bulunmamaktadır.
+        </div>
+    <% } %>
+
+    <script>
+        function clearOrders() {
+            if (confirm('Tüm siparişleri temizlemek istediğinizden emin misiniz?')) {
+                // JavaScript ile orders dizisini temizleme
+                fetch('/deleteMemory', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload(); // Sayfayı yeniden yükleme
+                    } else {
+                        alert('Siparişleri temizlerken bir hata oluştu.');
+                    }
+                }).catch(error => {
+                    console.error('Hata:', error);
+                    alert('Siparişleri temizlerken bir hata oluştu.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
