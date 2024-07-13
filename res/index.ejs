@@ -6,33 +6,45 @@
   <title>Stok Takip Sistemi</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 0;
+      color: #333;
     }
     header {
-      background-color: #333;
+      background-color: #2c3e50;
       color: white;
-      padding: 20px;
+      padding: 20px 0;
       text-align: center;
+    }
+    nav {
+      background-color: #34495e;
+      padding: 10px 0;
     }
     nav a {
       color: white;
       margin: 0 15px;
       text-decoration: none;
       font-weight: bold;
+      font-size: 16px;
     }
     nav a:hover {
       text-decoration: underline;
     }
     main {
       padding: 20px;
-      max-width: 1200px;
+      max-width: 1000px;
       margin: auto;
+      background-color: #ecf0f1;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    h1, h2 {
-      color: #333;
+    h1 {
+      color: white;
+    }
+    h2 {
+      color: #2980b9;
       text-align: center;
     }
     .btn {
@@ -40,48 +52,63 @@
       padding: 10px 20px;
       margin: 20px 0;
       color: white;
-      background-color: #007bff;
+      background-color: #2980b9;
       text-decoration: none;
       border-radius: 5px;
       text-align: center;
+      transition: background-color 0.3s ease;
     }
     .btn:hover {
-      background-color: #0056b3;
+      background-color: #1f6395;
     }
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
       background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    table, th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
+    th, td {
+      padding: 15px;
+      text-align: left;
     }
     th {
+      background-color: #2980b9;
+      color: white;
+    }
+    tr:nth-child(even) {
       background-color: #f2f2f2;
     }
     tr:hover {
-      background-color: #f1f1f1;
+      background-color: #e1e1e1;
     }
-    p {
-      text-align: center;
+    .greeting-container {
+      border-left: 6px solid;
+      padding: 10px 20px;
+      margin: 20px 0;
+      font-size: 14px;
+      background-color: #e2e2e2;
+      font-weight: bold;
+      color: #333;
     }
   </style>
 </head>
-<body>
+<body onload="displayMessage()">
   <header>
-    <h1 style="color:white">Stok Takip Sistemi</h1>
-    <nav>
-      <a href="/">Ana Sayfa</a>
-      <a href="/add">Yeni Ürün Ekle</a>
-      <a href="/find">Ürün Bul</a>
-      <a href="/scan">Kasa Modu</a>
-      <a href="/memory">Geçmiş Alışveriş(ler)</a>
-    </nav>
+    <h1>Stok Takip Sistemi</h1>
   </header>
-  
+  <nav>
+    <a href="/">Ana Sayfa</a>
+    <a href="/add">Yeni Ürün Ekle</a>
+    <a href="/find">Ürün Bul</a>
+    <a href="/scan">Kasa Modu</a>
+    <a href="/memory">Geçmiş Alışveriş(ler)</a>
+    <a href="/dayEndingReport">Gün Sonu Raporu</a>
+  </nav>
   <main>
+    <div class="greeting-container" id="greeting"></div>
     <h2>Ürün Listesi</h2>
     <% if (products.length > 0) { %>
       <table>
@@ -117,5 +144,26 @@
       <p>Hiç ürün bulunmamaktadır.</p>
     <% } %>
   </main>
+<script>
+function displayMessage() {
+  var now = new Date();
+  var hours = now.getHours();
+  var message = "";
+  var greetingContainer = document.getElementById("greeting");
+
+  if (hours < 12) {
+    message = "Günaydın, Nihai çalışanlar!";
+    greetingContainer.style.borderLeftColor = "#FFA500"; // Turuncu (Sabah)
+  } else if (hours < 18) {
+    message = "İyi günler, Nihai çalışanlar!";
+    greetingContainer.style.borderLeftColor = "#00BFFF"; // Mavi (Öğlen)
+  } else {
+    message = "İyi akşamlar, Nihai çalışanlar!";
+    greetingContainer.style.borderLeftColor = "#8B0000"; // Koyu Kırmızı (Akşam)
+  }
+
+  greetingContainer.innerText = message;
+}
+</script>
 </body>
 </html>
