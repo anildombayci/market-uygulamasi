@@ -1,4 +1,3 @@
-<!-- views/report.ejs -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -7,25 +6,42 @@
   <title>Gün Sonu Raporu</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f8f9fa;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f0f0f0;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       color: #333;
+    }
+    header {
+      background-color: #004d99;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    nav a {
+      color: white;
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #ffcc00;
     }
     .container {
       max-width: 800px;
       margin: 40px auto;
-      background-color: #fff;
+      background-color: #ffffff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
-      color: #007bff;
+      color: #004d99;
       margin-bottom: 20px;
-      font-size: 24px;
+      font-size: 2rem;
     }
     table {
       width: 100%;
@@ -36,14 +52,22 @@
       border: 1px solid #ddd;
     }
     th, td {
-      padding: 8px;
+      padding: 12px;
       text-align: center;
     }
     th {
-      background-color: #f1f3f5;
+      background-color: #f2f2f2;
+    }
+    td {
+      background-color: #fff;
+    }
+    tr:nth-child(even) td {
+      background-color: #f9f9f9;
     }
     .total {
       font-weight: bold;
+      background-color: #004d99;
+      color: white;
     }
     .empty-message {
       text-align: center;
@@ -51,23 +75,9 @@
       font-style: italic;
       color: #888;
     }
-    header {
-      background-color: #333;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
   </style>
 </head>
+<body>
   <header>
     <h1 style="color:white">Stok Takip Sistemi</h1>
     <nav>
@@ -79,7 +89,7 @@
       <a href="/dayEndingReport">Gün Sonu Raporu</a>
     </nav>
   </header>
-<body>
+
   <div class="container">
     <h1>Gün Sonu Raporu - <%= date %></h1>
     <% if (dayEndingReport.length > 0) { %>

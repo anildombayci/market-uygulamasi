@@ -6,60 +6,94 @@
   <title>Yeni Ürün Ekle</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f7f7;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     form {
-      max-width: 600px;
-      margin: auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      animation: fadeIn 1s ease-in-out;
+      margin-top: 80px; /* Adjust this value to pull the form down */
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333333;
     }
     label {
-      font-weight: bold;
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555555;
     }
     input[type="text"], input[type="number"] {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      border-radius: 3px;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
       box-sizing: border-box;
+      background-color: #f0f0f0;
+      color: #333333;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #999999;
+      outline: none;
+      box-shadow: 0 0 8px rgba(153, 153, 153, 0.6);
     }
     input[type="submit"] {
-      background-color: #007bff;
-      color: white;
+      width: 100%;
+      padding: 12px;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      border-radius: 8px;
+      background-color: #4a4a4a;
+      color: #ffffff;
+      font-size: 1em;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
     input[type="submit"]:hover {
-      background-color: #0056b3;
+      background-color: #333333;
     }
     header {
-      background-color: #333;
-      color: white;
+      width: 100%;
+      background-color: #4a4a4a;
+      color: #ffffff;
       padding: 20px;
       text-align: center;
+      position: fixed;
+      top: 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     nav a {
-      color: white;
+      color: #ffffff;
       margin: 0 15px;
       text-decoration: none;
       font-weight: bold;
+      transition: color 0.3s;
     }
     nav a:hover {
-      text-decoration: underline;
+      color: #e0e0e0;
     }
   </style>
 </head>
+<body>
   <header>
     <h1 style="color:white">Stok Takip Sistemi</h1>
     <nav>
@@ -71,9 +105,9 @@
       <a href="/dayEndingReport">Gün Sonu Raporu</a>
     </nav>
   </header>
-<body>
-  <h1 style="text-align: center;">Yeni Ürün Ekle</h1>
+
   <form action="/add" method="POST">
+    <h1>Yeni Ürün Ekle</h1>
     <label for="name">Ürün Adı:</label>
     <input type="text" id="name" name="name" required>
 
